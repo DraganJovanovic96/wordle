@@ -1,0 +1,48 @@
+# ===============================
+# = SPRING
+# ===============================
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        opaquetoken:
+          introspection-uri: https://oauth2.googleapis.com/tokeninfo
+        jwt:
+          issuer-uri: https://accounts.google.com
+          jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+  datasource:
+    url: jdbc:postgresql://localhost:5432/wordle
+    username: ${username}
+    password: ${password}
+    driver-class-name: org.postgresql.Driver
+
+  # ===============================
+  # = JPA / HIBERNATE
+  # ===============================
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      properties:
+        hibernate.globally_quoted_identifiers: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    defer-datasource-initialization: false
+
+  sql:
+    init:
+      mode: always
+
+  # ===============================
+  # = MIGRATIONS
+  # ===============================
+
+  flyway:
+    validate-on-migrate: true
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    locations: classpath:db/migration
