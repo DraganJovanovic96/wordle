@@ -13,13 +13,21 @@ spring:
         jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: false
     properties:
       hibernate:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    validate-on-migrate: true
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    locations: classpath:db/migration
+
 
 application:
   security:
