@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.Instant;
 
 /**
- * This class represents status information for entities in the company management system.
+ * This class represents status information for entities in wordle system.
  * It contains fields to track the creation date and time, the last update date and time,
  * and whether the entity has been deleted.
  *

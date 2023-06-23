@@ -2,9 +2,9 @@ package com.project.wordle.service;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.wordle.dto.AuthenticationRequest;
-import com.project.wordle.dto.AuthenticationResponse;
-import com.project.wordle.dto.RegisterRequest;
+import com.project.wordle.dto.AuthenticationRequestDto;
+import com.project.wordle.dto.AuthenticationResponseDto;
+import com.project.wordle.dto.RegisterRequestDto;
 import com.project.wordle.enumeration.TokenType;
 import com.project.wordle.model.Token;
 import com.project.wordle.model.User;
@@ -21,16 +21,48 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
+/**
+ * Service class for handling authentication-related operations.
+ *
+ * @author Dragan Jovanovic
+ * @version 1.0
+ * @since 1.0
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
+    /**
+     * The repository used to retrieve user data.
+     */
     private final UserRepository repository;
+
+    /**
+     * The repository used to retrieve token data.
+     */
     private final TokenRepository tokenRepository;
+
+    /**
+     * Service interface for encoding passwords. The preferred implementation is BCryptPasswordEncoder.
+     */
     private final PasswordEncoder passwordEncoder;
+
+    /**
+     * The Service used to retrieve token data.
+     */
     private final JwtService jwtService;
+
+    /**
+     * Processes an Authentication request.
+     */
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    /**
+     * Registers a new user.
+     *
+     * @param request the registration request data
+     * @return the authentication response containing the access token and refresh token
+     */
+    public AuthenticationResponseDto register(RegisterRequestDto request) {
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
@@ -46,13 +78,19 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(savedUser, jwtToken);
-        return AuthenticationResponse.builder()
+        return AuthenticationResponseDto.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    /**
+     * Authenticates a user.
+     *
+     * @param request the authentication request data
+     * @return the authentication response containing the access token and refresh token
+     */
+    public AuthenticationResponseDto authenticate(AuthenticationRequestDto request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -65,12 +103,19 @@ public class AuthenticationService {
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
-        return AuthenticationResponse.builder()
+
+        return AuthenticationResponseDto.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .build();
     }
 
+    /**
+     * Saves a user token.
+     *
+     * @param user     the user associated with the token
+     * @param jwtToken the JWT token to be saved
+     */
     private void saveUserToken(User user, String jwtToken) {
         var token = Token.builder()
                 .user(user)
@@ -82,6 +127,11 @@ public class AuthenticationService {
         tokenRepository.save(token);
     }
 
+    /**
+     * Revokes all tokens associated with a user.
+     *
+     * @param user the user whose tokens should be revoked
+     */
     private void revokeAllUserTokens(User user) {
         var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
         if (validUserTokens.isEmpty())
@@ -93,6 +143,13 @@ public class AuthenticationService {
         tokenRepository.saveAll(validUserTokens);
     }
 
+    /**
+     * Refreshes the access token.
+     *
+     * @param request  the HTTP request
+     * @param response the HTTP response
+     * @throws IOException if an I/O error occurs
+     */
     public void refreshToken(
             HttpServletRequest request,
             HttpServletResponse response
@@ -112,7 +169,7 @@ public class AuthenticationService {
                 var accessToken = jwtService.generateToken(user);
                 revokeAllUserTokens(user);
                 saveUserToken(user, accessToken);
-                var authResponse = AuthenticationResponse.builder()
+                var authResponse = AuthenticationResponseDto.builder()
                         .accessToken(accessToken)
                         .refreshToken(refreshToken)
                         .build();

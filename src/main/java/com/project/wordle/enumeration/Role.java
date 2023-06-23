@@ -11,11 +11,20 @@ import java.util.stream.Collectors;
 
 import static com.project.wordle.enumeration.Permission.*;
 
-
+/**
+ * Enum representing different roles for users.
+ */
 @RequiredArgsConstructor
 public enum Role {
 
+    /**
+     * User role with no permissions.
+     */
     USER(Collections.emptySet()),
+
+    /**
+     * Administrator role with all permissions.
+     */
     ADMIN(
             Set.of(
                     ADMIN_READ,
@@ -28,6 +37,10 @@ public enum Role {
                     MANAGER_CREATE
             )
     ),
+
+    /**
+     * Manager role with specific permissions.
+     */
     MANAGER(
             Set.of(
                     MANAGER_READ,
@@ -37,9 +50,17 @@ public enum Role {
             )
     );
 
+    /**
+     * The set of permissions associated with the role.
+     */
     @Getter
     private final Set<Permission> permissions;
 
+    /**
+     * Returns the authorities associated with the role.
+     *
+     * @return a list of SimpleGrantedAuthority objects representing the role's authorities
+     */
     public List<SimpleGrantedAuthority> getAuthorities() {
         var authorities = getPermissions()
                 .stream()
