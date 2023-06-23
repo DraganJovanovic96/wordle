@@ -19,6 +19,13 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Entity representing a user.
+ *
+ * @author Dragan Jovanovic
+ * @version 1.0
+ * @since 1.0
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -30,8 +37,19 @@ import java.util.List;
 @Filter(name = "deletedUserFilter", condition = "deleted = :isDeleted")
 public class User extends BaseEntity<Long> implements UserDetails {
 
+    /**
+     * The user's firstname.
+     */
     private String firstname;
+
+    /**
+     * The user's lastname.
+     */
     private String lastname;
+
+    /**
+     * The user's password.
+     */
     private String password;
 
     /**
@@ -67,9 +85,15 @@ public class User extends BaseEntity<Long> implements UserDetails {
     @Column
     private String imageUrl;
 
+    /**
+     * The role of the user.
+     */
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    /**
+     * The tokens associated with the user.
+     */
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
 
