@@ -2,7 +2,7 @@ package com.project.wordle.config;
 
 
 import com.project.wordle.repository.TokenRepository;
-import com.project.wordle.service.JwtService;
+import com.project.wordle.service.impl.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

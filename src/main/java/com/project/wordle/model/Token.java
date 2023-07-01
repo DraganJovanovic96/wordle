@@ -9,6 +9,10 @@ import lombok.NoArgsConstructor;
 
 /**
  * Entity representing an authentication token.
+ *
+ * @author Dragan Jovanovic
+ * @version 1.0
+ * @since 1.0
  */
 @Data
 @Builder

@@ -3,6 +3,7 @@ package com.project.wordle.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,13 +11,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
-import static com.project.wordle.enumeration.Permission.*;
+import static com.project.wordle.enumeration.Permission.ADMIN_READ;
 import static com.project.wordle.enumeration.Role.ADMIN;
-import static com.project.wordle.enumeration.Role.MANAGER;
-import static org.springframework.http.HttpMethod.*;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
 
 /**
  * SecurityConfiguration is a configuration class that defines the security settings and filters for the application.
@@ -74,8 +76,11 @@ public class SecurityConfiguration {
                         )
                         .permitAll()
 
-                        .requestMatchers("/api/v1/demo").hasAnyRole(ADMIN.name(), MANAGER.name())
-                        .requestMatchers(GET, "/api/v1/demo").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
+                        .requestMatchers("/api/v1/demo").hasAnyRole(ADMIN.name())
+                        .requestMatchers(GET, "/api/v1/demo").hasAnyAuthority(ADMIN_READ.name())
+
+                        .requestMatchers("/api/v1/user-game").hasAnyRole(ADMIN.name())
+                        .requestMatchers(POST, "/api/v1/user-game").hasAnyAuthority(ADMIN_READ.name())
 
                         .anyRequest()
                         .authenticated()
@@ -89,8 +94,14 @@ public class SecurityConfiguration {
                         .logoutUrl("/api/v1/auth/logout")
                         .addLogoutHandler(logoutHandler)
                         .logoutSuccessHandler(
-                                (request, response, authentication) -> SecurityContextHolder.clearContext()));
+                                (request, response, authentication) -> SecurityContextHolder.clearContext()))
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+                );
 
         return http.build();
     }
 }
+
+
+
