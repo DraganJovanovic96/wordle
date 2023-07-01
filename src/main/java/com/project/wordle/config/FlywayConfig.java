@@ -7,6 +7,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /**
  * This configuration classes is related to Flyway database migration tool.
  * <p>
@@ -17,6 +20,7 @@ import org.springframework.context.annotation.DependsOn;
  * only if Flyway is enabled in the application properties.
  *
  * @author Dragan Jovanovic
+ * @version 1.0
  * @since 1.0
  **/
 @Configuration
@@ -47,5 +51,15 @@ public class FlywayConfig {
         if (flywayProperties.isEnabled())
             flyway.migrate();
         return new Object();
+    }
+
+    @Bean
+    public String getPathString() {
+        String relativePath = "wordle/target/classes/words.txt";
+        Path path = Paths.get(relativePath).toAbsolutePath().normalize();
+
+        String pathString = path.toString();
+
+        return pathString;
     }
 }

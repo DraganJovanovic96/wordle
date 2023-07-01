@@ -1,4 +1,4 @@
-package com.project.wordle.service;
+package com.project.wordle.service.impl;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

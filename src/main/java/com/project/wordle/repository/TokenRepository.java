@@ -4,6 +4,7 @@ package com.project.wordle.repository;
 import com.project.wordle.model.Token;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +16,8 @@ import java.util.Optional;
  * @version 1.0
  * @since 1.0
  */
-public interface TokenRepository extends JpaRepository<Token, Integer> {
+@Repository
+public interface TokenRepository extends JpaRepository<Token, Long> {
 
     /**
      * Retrieves a list of valid tokens associated with a user.

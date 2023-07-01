@@ -3,7 +3,7 @@ package com.project.wordle.controller;
 import com.project.wordle.dto.AuthenticationRequestDto;
 import com.project.wordle.dto.AuthenticationResponseDto;
 import com.project.wordle.dto.RegisterRequestDto;
-import com.project.wordle.service.AuthenticationService;
+import com.project.wordle.service.impl.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

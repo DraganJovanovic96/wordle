@@ -20,7 +20,9 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Entity representing a user.
+ * This class represents the User entity.
+ * It extends the {@link BaseEntity} class, which contains fields for creation
+ * and update timestamps as well as a boolean flag for deletion status.
  *
  * @author Dragan Jovanovic
  * @version 1.0
@@ -96,6 +98,9 @@ public class User extends BaseEntity<Long> implements UserDetails {
      */
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserGame> userGames;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

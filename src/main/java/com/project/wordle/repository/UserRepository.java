@@ -3,6 +3,7 @@ package com.project.wordle.repository;
 
 import com.project.wordle.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
@@ -13,7 +14,8 @@ import java.util.Optional;
  * @version 1.0
  * @since 1.0
  */
-public interface UserRepository extends JpaRepository<User, Integer> {
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
     /**
      * Method that returns optional of User by email.
      *

@@ -1,4 +1,4 @@
-package com.project.wordle.service;
+package com.project.wordle.service.impl;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
